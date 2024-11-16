@@ -1,9 +1,15 @@
 package evaluator.arith;
 
 import evaluator.Evaluator;
+import evaluator.IllegalPostfixExpressionException;
 import language.Operand;
+import language.Operator;
+import parser.PostfixParser;
 import parser.arith.ArithPostfixParser;
+import stack.LinkedStack;
 import stack.StackInterface;
+import stack.StackUnderflowException;
+
 
 /**
  * An {@link ArithPostfixEvaluator} is a post fix evaluator
@@ -17,33 +23,56 @@ public class ArithPostfixEvaluator implements Evaluator<Integer> {
      * Constructs an {@link ArithPostfixEvaluator}.
      */
     public ArithPostfixEvaluator() {
-        //TODO Initialize to your LinkedStack
-        stack = null;
+        // Initialize to your LinkedStack
+        this.stack = new LinkedStack<>();
     }
 
     /**
      * Evaluates a postfix expression.
-     * @return the result
+     * @param expr the expression to be evaluated
+     * @return the value of evaluating expr
+     * @throws IllegalPostfixExpressionException if the expression is not a valid post fix expression
      */
     @Override
     public Integer evaluate(String expr) {
-        // TODO Use all the things built so far to create
+        // Use all the things built so far to create
         //   the algorithm for postfix evaluation
         ArithPostfixParser parser = new ArithPostfixParser(expr);
         while (parser.hasNext()) {
             switch (parser.nextType()) {
                 case OPERAND:
-                    //TODO What do we do when we see an operand?
+                    // What do we do when we see an operand?
+                    Operand<Integer> operand = parser.nextOperand();
+                    this.stack.push(operand);
                     break;
                 case OPERATOR:
-                    //TODO What do we do when we see an operator?
+                    // What do we do when we see an operator?
+                    Operator<Integer> operator = parser.nextOperator();
+                    int numArgs = operator.getNumberOfArguments();
+                    for (int i = numArgs - 1; i >= 0; i--) {
+                        try {
+                            operator.setOperand(i, this.stack.pop());
+                        } catch (StackUnderflowException e) {
+                            throw new IllegalPostfixExpressionException("Not enough operands for operator");
+                        }
+                    }
+                    Operand<Integer> result = operator.performOperation();
+                    this.stack.push(result);
                     break;
                 default:
-                    //TODO If we get here, something went very wrong
+                    // If we get here, something went very wrong
+                    throw new IllegalPostfixExpressionException("Invalid expression");
             }
         }
 
-        //TODO What do we return?
-        return null;
+        //What do we return?
+        if (this.stack.size() != 1) {
+            throw new IllegalPostfixExpressionException("Too many operands");
+        }
+        try {
+            return this.stack.pop().getValue();
+        } catch (StackUnderflowException e) {
+            throw new IllegalPostfixExpressionException("Empty Stack"); // Should not happen, but handle for completeness
+        }
     }
 }

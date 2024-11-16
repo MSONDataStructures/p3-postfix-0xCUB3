@@ -9,8 +9,12 @@ import language.Operand;
  * @author jcollard, jddevaug
  */
 public class PlusOperator extends BinaryOperator<Integer> {
+
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
+     * Performs the addition operation.
+     * @return an Operand containing the result of the addition
+     * @throws IllegalStateException if either operand is null
      */
     @Override
     public Operand<Integer> performOperation() {
