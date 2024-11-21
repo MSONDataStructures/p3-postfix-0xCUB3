@@ -27,4 +27,9 @@ public class NegateOperator extends UnaryOperator<Integer> {
         Integer result = -op0.getValue();
         return new Operand<Integer>(result);
     }
+
+    @Override
+    public int getPriority() {
+        return 1;
+    }
 }
