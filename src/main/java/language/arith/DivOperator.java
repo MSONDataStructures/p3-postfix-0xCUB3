@@ -48,4 +48,9 @@ public class DivOperator extends BinaryOperator<Integer> {
         }
         super.setOperand(i, operand);
     }
+
+    @Override
+    public int getPriority() {
+        return 2; // Same as multiply
+    }
 }

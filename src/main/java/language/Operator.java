@@ -38,4 +38,13 @@ public interface Operator<T> {
      * @throws NullPointerException if the operand provided is null.
      */
     void setOperand(int position, Operand<T> operand);
+
+    /**
+     * Returns the priority of this operator.
+     * Higher numbers indicate higher priority.
+     * @return the priority of this operator
+     */
+    default int getPriority() {
+        return 1; // We'll use 1 as default priority
+    }
 }

@@ -28,4 +28,9 @@ public class SubOperator extends BinaryOperator<Integer> {
         Integer result = op0.getValue() - op1.getValue();
         return new Operand<>(result);
     }
+
+    @Override
+    public int getPriority() {
+        return 1; // Same as plus
+    }
 }

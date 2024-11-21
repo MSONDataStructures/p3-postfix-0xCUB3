@@ -29,4 +29,9 @@ public class MultOperator extends BinaryOperator<Integer> {
         Integer result = op0.getValue() * op1.getValue();
         return new Operand<>(result);
     }
+
+    @Override
+    public int getPriority() {
+        return 2; // Higher than plus/minus
+    }
 }
